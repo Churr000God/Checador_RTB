@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block contenido %}
+{% if marca_creada %}
+<div class="confirmacion-marca" role="status">
+  <div class="icono-confirmacion">
+    <svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+  </div>
+  <h1>Marca registrada</h1>
+  <p class="hora-confirmacion">{{ marca_creada.hora_dispositivo[11:16] }} h</p>
+  <p class="detalle-confirmacion">Ya podés retirarte.</p>
+</div>
+{% else %}
+<h1>¿Quién marca?</h1>
+<p class="instruccion-kiosco">Sin lector biométrico conectado todavía — elegí tu ficha en la lista y confirmá.</p>
+
+{% if error %}
+<p role="alert" class="alerta-kiosco">{{ error }}</p>
+{% endif %}
+
+<form method="post" action="/marcar" class="form-marcar">
+  <div class="rejilla-personas">
+    {% for persona in personas %}
+    <label class="tarjeta-persona">
+      <input type="radio" name="plantilla_id" value="{{ persona.plantilla_id }}" required>
+      <span class="avatar-persona" aria-hidden="true">{{ persona.plantilla_id }}</span>
+      <strong>Ficha {{ persona.plantilla_id }}</strong>
+      <span class="identificador-persona">{{ persona.persona_id }}</span>
+    </label>
+    {% else %}
+    <p>No hay personas cargadas en la caché local (persona_cache).</p>
+    {% endfor %}
+  </div>
+  <button type="submit" class="boton-marcar">Registrar marca</button>
+</form>
+{% endif %}
+{% endblock %}

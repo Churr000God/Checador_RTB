@@ -1,0 +1,420 @@
+/* Identidad visual Kairos para el checador físico -- paleta/tipografía tomadas de
+   sistema-control-jornada/frontend/src/styles/tokens.css (proyecto hermano), reescrita desde
+   cero para esta pantalla: es un KIOSCO táctil pegado a la pared, no un escritorio con mouse.
+   Botones grandes, poco texto, feedback inmediato al tocar -- ver base.html para el layout. */
+
+:root {
+  --teal: #159895;
+  --teal-claro: #57c5b6;
+  --blanco: #ffffff;
+  --superficie: #eef8f7;
+  --navy-medio: #1a5f7a;
+  --navy: #002b5b;
+  --oro: #ad9551;
+  --rojo: #b3261e;
+  --font-titulo: "Playfair Display", Georgia, serif;
+  --font-cuerpo: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --radio-tarjeta: 14px;
+  --sombra-tarjeta: 0 2px 10px rgba(0, 43, 91, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-cuerpo);
+  color: var(--navy);
+  background: var(--superficie);
+  /* Kiosco táctil: nadie selecciona texto arrastrando el dedo, y sin esto un toque largo
+     accidental dispara el menú de selección/copiar nativo del navegador. */
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+h1 {
+  font-family: var(--font-titulo);
+  font-size: 1.9rem;
+  margin: 0 0 0.35rem;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+/* ─── layout de pantalla completa ─── */
+
+.pantalla-kiosco {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.cabecera-kiosco {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 1.25rem 1.5rem 1rem;
+}
+
+.wordmark-kiosco {
+  font-family: var(--font-titulo);
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--navy);
+}
+
+.subtitulo-kiosco {
+  font-size: 0.95rem;
+  color: var(--navy-medio);
+}
+
+.contenido-kiosco {
+  padding: 0.5rem 1.5rem 1.5rem;
+  max-width: 60rem;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.instruccion-kiosco {
+  color: var(--navy-medio);
+  font-size: 1.05rem;
+}
+
+/* ─── pestañas inferiores, tamaño de dedo ─── */
+
+.tabs-kiosco {
+  display: flex;
+  background: var(--blanco);
+  border-top: 1px solid rgba(0, 43, 91, 0.1);
+  box-shadow: 0 -2px 10px rgba(0, 43, 91, 0.05);
+}
+
+.tab-kiosco {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.85rem 0.5rem 1rem;
+  text-decoration: none;
+  color: var(--navy-medio);
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-top: 3px solid transparent;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.tab-kiosco:active {
+  background: var(--superficie);
+}
+
+.tab-kiosco--activa {
+  color: var(--teal);
+  border-top-color: var(--teal);
+}
+
+/* ─── alertas ─── */
+
+.alerta-kiosco {
+  background: #fdecea;
+  border: 1px solid rgba(179, 38, 30, 0.2);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  color: var(--rojo);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* ─── pantalla Marcar: rejilla de fichas ─── */
+
+.form-marcar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 1;
+}
+
+.rejilla-personas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: 1rem;
+}
+
+.tarjeta-persona {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--blanco);
+  border: 2px solid rgba(0, 43, 91, 0.12);
+  border-radius: var(--radio-tarjeta);
+  box-shadow: var(--sombra-tarjeta);
+  padding: 1.25rem 0.75rem;
+  cursor: pointer;
+  text-align: center;
+  /* Tamaño mínimo de blanco de toque cómodo en tablet -- no depende del contenido. */
+  min-height: 8.5rem;
+  transition: border-color 120ms ease, transform 100ms ease, background-color 120ms ease;
+}
+
+.tarjeta-persona:active {
+  transform: scale(0.97);
+}
+
+.tarjeta-persona input[type="radio"] {
+  /* Oculto visualmente pero sigue siendo el control real -- foco de teclado/lector de
+     pantalla y validación nativa (required) se mantienen intactos. */
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.tarjeta-persona:has(input:checked) {
+  border-color: var(--teal);
+  background: rgba(21, 152, 149, 0.06);
+}
+
+.tarjeta-persona:has(input:focus-visible) {
+  outline: 3px solid var(--teal);
+  outline-offset: 2px;
+}
+
+.avatar-persona {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  background: linear-gradient(160deg, var(--teal) 0%, var(--teal-claro) 100%);
+  color: var(--blanco);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.tarjeta-persona:has(input:checked) .avatar-persona {
+  background: linear-gradient(160deg, var(--navy) 0%, var(--teal) 100%);
+}
+
+.tarjeta-persona strong {
+  font-size: 1.05rem;
+  color: var(--navy);
+}
+
+.identificador-persona {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--navy-medio);
+  letter-spacing: 0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.boton-marcar {
+  font-family: var(--font-cuerpo);
+  font-weight: 700;
+  font-size: 1.25rem;
+  padding: 1.1rem 1.5rem;
+  border-radius: var(--radio-tarjeta);
+  border: none;
+  background: var(--teal);
+  color: var(--blanco);
+  cursor: pointer;
+  transition: background-color 120ms ease, transform 100ms ease;
+}
+
+.boton-marcar:active {
+  transform: scale(0.98);
+  background: var(--navy-medio);
+}
+
+/* ─── confirmación de marca: tiene que sentirse inmediata y tranquilizadora ─── */
+
+.confirmacion-marca {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.5rem;
+  padding: 3rem 1rem;
+}
+
+.icono-confirmacion {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 999px;
+  background: var(--teal);
+  color: var(--blanco);
+  display: grid;
+  place-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.confirmacion-marca h1 {
+  color: var(--navy);
+}
+
+.hora-confirmacion {
+  font-family: var(--font-titulo);
+  font-size: 2.5rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--teal);
+  margin: 0;
+}
+
+.detalle-confirmacion {
+  color: var(--navy-medio);
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes aparecer-confirmacion {
+    from {
+      opacity: 0;
+      transform: scale(0.85);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .icono-confirmacion {
+    animation: aparecer-confirmacion 320ms ease-out both;
+  }
+}
+
+/* ─── tablas (Historial) ─── */
+
+.tabla-desplazable-kiosco {
+  overflow-x: auto;
+  border-radius: var(--radio-tarjeta);
+  box-shadow: var(--sombra-tarjeta);
+}
+
+.tabla-kiosco {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--blanco);
+  font-size: 0.95rem;
+}
+
+.tabla-kiosco th,
+.tabla-kiosco td {
+  text-align: left;
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid rgba(0, 43, 91, 0.08);
+}
+
+.tabla-kiosco th {
+  color: var(--navy-medio);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.tabla-kiosco tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tabla-kiosco .numerica {
+  font-variant-numeric: tabular-nums;
+}
+
+.celda-vacia {
+  text-align: center;
+  color: var(--navy-medio);
+  padding: 2rem 1rem;
+}
+
+.insignia-kiosco {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.insignia-kiosco--ok {
+  background: rgba(21, 152, 149, 0.12);
+  color: var(--teal);
+}
+
+.insignia-kiosco--pendiente {
+  background: rgba(173, 149, 81, 0.15);
+  color: var(--oro);
+}
+
+/* ─── pantalla Config ─── */
+
+.tarjeta-config {
+  background: var(--blanco);
+  border-radius: var(--radio-tarjeta);
+  box-shadow: var(--sombra-tarjeta);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.fila-config {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.etiqueta-config {
+  font-size: 0.95rem;
+  color: var(--navy-medio);
+  font-weight: 600;
+}
+
+.contador-pendientes {
+  font-family: var(--font-titulo);
+  font-size: 1.8rem;
+  color: var(--oro);
+  font-variant-numeric: tabular-nums;
+}
+
+.contador-pendientes--cero {
+  color: var(--teal);
+}
+
+.tarjeta-resultado-sync {
+  background: var(--blanco);
+  border-radius: var(--radio-tarjeta);
+  box-shadow: var(--sombra-tarjeta);
+  padding: 1.1rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.resumen-sync {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+.lista-errores-sync {
+  margin: 0.85rem 0 0;
+  padding-left: 1.1rem;
+  color: var(--rojo);
+  font-size: 0.88rem;
+}

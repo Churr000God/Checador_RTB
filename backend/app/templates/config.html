@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block contenido %}
+<h1>Config</h1>
+
+<div class="tarjeta-config">
+  <div class="fila-config">
+    <span class="etiqueta-config">Dispositivo</span>
+    <span class="identificador-persona">{{ dispositivo_id }}</span>
+  </div>
+  <div class="fila-config">
+    <span class="etiqueta-config">Pendientes de sincronizar</span>
+    <span class="contador-pendientes {{ 'contador-pendientes--cero' if pendientes == 0 else '' }}">{{ pendientes }}</span>
+  </div>
+</div>
+
+{% if resultado_sync %}
+<div class="tarjeta-resultado-sync">
+  <p class="resumen-sync">
+    <span class="insignia-kiosco insignia-kiosco--ok">{{ resultado_sync.enviadas }} enviada(s)</span>
+    {% if resultado_sync.fallidas %}
+    <span class="insignia-kiosco insignia-kiosco--pendiente">{{ resultado_sync.fallidas }} fallida(s)</span>
+    {% endif %}
+  </p>
+  {% if resultado_sync.errores %}
+  <ul class="lista-errores-sync">
+    {% for error in resultado_sync.errores %}
+    <li>{{ error }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>
+{% endif %}
+
+<form method="post" action="/config">
+  <button type="submit" class="boton-marcar">Sincronizar ahora</button>
+</form>
+{% endblock %}

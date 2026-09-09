@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block contenido %}
+<h1>Historial</h1>
+<p class="instruccion-kiosco">Últimas marcas registradas en este dispositivo.</p>
+
+<div class="tabla-desplazable-kiosco">
+  <table class="tabla-kiosco">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Persona</th>
+        <th>Hora</th>
+        <th>Estado</th>
+        <th>Llegada al servidor</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for marca in marcas %}
+      <tr>
+        <td class="numerica">{{ marca.numero_secuencial }}</td>
+        <td><span class="identificador-persona">{{ marca.persona_id }}</span></td>
+        <td class="numerica">{{ marca.hora_dispositivo[11:16] }}</td>
+        <td>
+          {% if marca.sincronizado %}
+          <span class="insignia-kiosco insignia-kiosco--ok">Sincronizado</span>
+          {% else %}
+          <span class="insignia-kiosco insignia-kiosco--pendiente">Pendiente</span>
+          {% endif %}
+        </td>
+        <td class="numerica">{{ marca.hora_llegada_servidor[11:16] if marca.hora_llegada_servidor else "—" }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="celda-vacia">Sin marcas todavía.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
